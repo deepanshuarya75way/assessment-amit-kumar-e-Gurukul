@@ -1,5 +1,5 @@
 import { Webhook } from "svix";
-import User from "../models/User";
+import User from "../models/User.js";
 
 // API Controller Function to Manage Cleark User with database
 
@@ -49,6 +49,7 @@ const clerkWebhooks = async (req, res) => {
 
       default:
         break;
+        S;
     }
   } catch (error) {
     res.json({ success: false, message: error.message });
