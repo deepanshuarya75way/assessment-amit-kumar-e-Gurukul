@@ -1,23 +1,14 @@
-// import express from "express";
-
-// const app = express();
-// const PORT = 5000;
-
-// app.get("/", (req, res) => {
-//   res.send("Server is running");
-// });
-
-// app.listen(PORT, () => {
-//   console.log(`Server started on http://localhost:${PORT}`);
-// });
-
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
 
 import connectDB from "./configs/mongodb.js";
 import clerkWebhooks from "./controllers/webhooks.js";
-//import { clerkWebhooks } from "./controllers/webhooks.js";
+import educatorRouter from "./routes/educator.Routes.js";
+
+import { clerkMiddleware } from "@clerk/express";
+import connectCloundinary from "./configs/cloudinary.js";
+import courseRouter from "./routes/courseRoute.js";
 
 // Initialize Express
 
@@ -26,16 +17,20 @@ const app = express();
 // Connect to db
 
 await connectDB();
+await connectCloundinary(),
+  // middlewares
 
-// middlewares
-
-app.use(cors());
+  app.use(cors());
+app.use(clerkMiddleware());
 
 //Routes
 
 app.get("/", (req, res) => res.send("API Working"));
 
 app.post("/clerk", express.json(), clerkWebhooks);
+
+app.use("/api/educator", express.json(), educatorRouter);
+app.use("/api/course", express.json(), courseRouter);
 
 // Port
 
