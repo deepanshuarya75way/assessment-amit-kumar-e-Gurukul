@@ -131,4 +131,4 @@ export const stripewebhooks = async (request, response) => {
   response.json({ received: true });
 };
 
-//export default clerkWebhooks;
+export default clerkWebhooks;
