@@ -3,9 +3,12 @@ import { dummyCourses } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 import { useAuth, useUser } from "@clerk/clerk-react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export const AppContext = createContext();
 export const AppContextProvider = (props) => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const currency = import.meta.env.VITE_CURRENCY;
 
   const navigate = useNavigate();
@@ -20,7 +23,20 @@ export const AppContextProvider = (props) => {
   // fetech all courses
 
   const fetechAllCourses = async () => {
-    setAllCourses(dummyCourses);
+    // setAllCourses(dummyCourses);
+    // for dummy data make first frontend side -  if you use this don't fetch data mongoose db .
+
+    try {
+      const { data } = await axios.get(backendUrl + "/api/course/all");
+
+      if (data.success) {
+        setAllCourses(data.course);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   // Function to calculate average rating of course
