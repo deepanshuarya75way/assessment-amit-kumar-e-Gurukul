@@ -7,14 +7,16 @@ export const getAllCourse = async (req, res) => {
       .select(["-courseContent", "-enrolledStudents"])
       .populate({ path: "educator" });
 
-    res.json({ sucess: true, courses });
+    // Corrected the typo: 'sucess' to 'success'
+    res.json({ success: true, courses });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    // Corrected the typo: 'sucess' to 'success' and added logging
+    console.error("Error fetching all courses:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-//get Course by id
-
+// get Course by id
 export const getCourseId = async (req, res) => {
   const { _id } = req.params;
   try {
@@ -22,8 +24,14 @@ export const getCourseId = async (req, res) => {
       path: "educator",
     });
 
-    //Remove lectureUrl if isPreviewFree is false
+    // Added a check to see if the course was found
+    if (!courseData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found." });
+    }
 
+    // Remove lectureUrl if isPreviewFree is false
     courseData.courseContent.forEach((chapter) => {
       chapter.chapterContent.forEach((lecture) => {
         if (!lecture.isPreviewFree) {
@@ -34,6 +42,7 @@ export const getCourseId = async (req, res) => {
 
     res.json({ success: true, courseData });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    console.error("Error fetching course by ID:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
