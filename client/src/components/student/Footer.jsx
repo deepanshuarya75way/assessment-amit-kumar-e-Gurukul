@@ -8,11 +8,7 @@ const Footer = () => {
         <div className="flex flex-col md:items-start items-center w-full">
           <img src={assets.logo_dark} alt="logo" />
 
-          <p className="mt-6 text-center md:text-left text-sm text-white/80">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore
-            distinctio officia aperiam aut natus, voluptas animi vitae et.
-            Doloremque, alias esse?
-          </p>
+          <p className="mt-6 text-center md:text-left text-sm text-white/80"></p>
         </div>
 
         <div className="flex flex-col md:items-start items-center w-full">
@@ -35,7 +31,7 @@ const Footer = () => {
 
         <div className="hidden md:flex flex-col items-start w-full">
           <h2 className="font-semibold text-white mb-5">
-            Subscribe to our newslette
+            Subscribe to our newsletter
           </h2>
           <p className="text-sm text-white/80">
             The latest news, articlesm, and resources, sent to your inbox
