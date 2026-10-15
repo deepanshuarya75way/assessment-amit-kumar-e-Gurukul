@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffec, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 import { useAuth, useUser } from "@clerk/clerk-react";
@@ -7,9 +7,9 @@ import { toast } from "react-toastify";
 
 export const AppContext = createContext();
 
-export const AppContextProvider = (props) => {
+export const AppContextProvider = ({children}) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const currency = import.meta.env.VITE_CURRENCY;
+  const currency = import.meta.env.VITE_CURRENCY || "USD";
 
   const navigate = useNavigate();
   const { getToken } = useAuth();
@@ -25,6 +25,39 @@ export const AppContextProvider = (props) => {
   const fetchAllCourses = async () => {
     // ... (Your fetchAllCourses function is mostly fine, no changes needed here)
     // You can keep your existing detailed error handling.
+
+
+    usecallback(async () => {
+      if(!backendUrl){
+        console.error("VITE_BACKEND_URL is missing from clients/.env");
+        return
+
+         setLoading(false);
+      }
+      setLoading(true);
+
+      
+      try{
+        const {data} = await axios.get(`${backendUrl}/api/course/all`);
+        if (data.success) {
+          setAllCourses(data.courses || []);
+        } else {
+          toast.error(data.message || "Failed to fetech courses.");
+
+        } catch (error) {
+          conosole.error("Error fetching coureses:", error);
+          toast.error("Could not connect to the course server.");
+
+        } finally{
+          setIsLoading(false);
+
+        }
+
+      },
+      
+    })
+
+
     try {
       setIsLoading(true);
       const { data } = await axios.get(`${backendUrl}/api/course/all`);
